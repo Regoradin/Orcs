@@ -1,7 +1,7 @@
 import pygame, sys, time, random
 from pygame.locals import *
 from pprint import pprint
-
+#simple change for github
 pygame.init()
 
 FPS = 60
