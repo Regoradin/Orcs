@@ -217,7 +217,7 @@ unit = generateUnit(worldWidth, worldHeight)
 
 youx = random.randint(0,worldWidth-1)
 youy = random.randint(0,worldHeight-1)
-while terrain[youy][youx] == 1 or terrain[youy][youx] == 4 or unit[youy][youx] == 2 or unit[youy][youx] == 3:
+while terrain[youy][youx] == 1 or terrain[youy][youx] == 4 or unit[youy][youx] == 'orcFighter1' or unit[youy][youx] == 'humanFighter1':
     youx = random.randint(0,worldWidth-1)
     youy = random.randint(0,worldHeight-1)
 if char == 'joe':
@@ -242,7 +242,7 @@ while True:
             death = time.time() + 2
             you = pygame.image.load('dead.png')
         if chance >= 25:
-            if unit[youx][youy] == 'orcFighter1':
+            if unit[youy][youx] == 'orcFighter1':
                 unit[youy][youx] = 'orcFighter1dead'
             else:
                 unit[youy][youx] = 'nothing'
@@ -292,6 +292,7 @@ while True:
                     unit[youy][youx] = 'orb'
                 if you == 'orc':
                     unit[youy][youx] = 'orcKing'
+                    print('switched')
                 you = orcFighter1
                 youy = choseny
                 youx = chosenx
