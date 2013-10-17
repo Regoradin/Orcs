@@ -217,7 +217,7 @@ unit = generateUnit(worldWidth, worldHeight)
 
 youx = random.randint(0,worldWidth-1)
 youy = random.randint(0,worldHeight-1)
-while terrain[youy][youx] == 1 or terrain[youy][youx] == 4 or unit[youy][youx] == 'orcFighter1' or unit[youy][youx] == 'humanFighter1':
+while terrain[youy][youx] == 'water' or terrain[youy][youx] == 'mountain' or unit[youy][youx] != 'nothing':
     youx = random.randint(0,worldWidth-1)
     youy = random.randint(0,worldHeight-1)
 if char == 'joe':
@@ -237,7 +237,6 @@ while True:
 
     if unit[youy][youx] != 'nothing' and unit [youy][youx] != 'orcFighter1dead':
         chance = random.randint(1,100)
-        print(unit[youy][youx])
         if chance < 25:
             death = time.time() + 2
             you = pygame.image.load('dead.png')
@@ -246,7 +245,6 @@ while True:
                 unit[youy][youx] = 'orcFighter1dead'
             else:
                 unit[youy][youx] = 'nothing'
-        print(unit[youy][youx])
 
     if death and time.time() >= death:
         pygame.quit()
@@ -282,15 +280,17 @@ while True:
             chosenx = int(chosencoordx)
             chosencoordy = mousey/pixelsPerGrid
             choseny = int(chosencoordy)
-            print(chosenx, choseny)
+            print(chosenx, choseny, you, unit[youy][youx])
             if unit[choseny][chosenx] == 'orcFighter1':
-                if you == 'joe':
-                    unit[youy][youx] = 'joe'
-                if you == 'king':
-                    unit[youy][youx] = 'pally'
-                if you == 'orb':
-                    unit[youy][youx] = 'orb'
-                if you == 'orc':
+                unit[choseny][chosenx] = 'nothing'
+                if char == 'joe':
+                    unit[youy][youx] = joe
+                if char == 'king':
+                    unit[youy][youx] = pally
+                if char == 'orb':
+                    unit[youy][youx] = orb
+                    print('switched')
+                if char == 'orc':
                     unit[youy][youx] = 'orcKing'
                     print('switched')
                 you = orcFighter1
