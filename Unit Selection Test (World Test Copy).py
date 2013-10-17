@@ -32,7 +32,7 @@ elif char == 'king':
     you = pygame.image.load('pally.png')
 elif char == 'orb':
     you = pygame.image.load('orb.png')
-elif char == 'orc':
+elif char == 'orcKing':
     you = pygame.image.load('orc_king.png')
 
 #Hero Units
@@ -226,7 +226,7 @@ if char == 'king':
     uni[youy][youx] = pally
 if char == 'orb':
     unit[youy][youx] = orb
-if char == 'orc':
+if char == 'orcKing':
     unit[youy][youx] = orcKing
 
 
@@ -290,10 +290,11 @@ while True:
                 if char == 'orb':
                     unit[youy][youx] = orb
                     print('switched')
-                if char == 'orc':
+                if char == 'orcKing':
                     unit[youy][youx] = 'orcKing'
                     print('switched')
                 you = orcFighter1
+                char = 'orcFighter1'
                 youy = choseny
                 youx = chosenx
             else:
