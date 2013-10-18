@@ -233,7 +233,7 @@ if char == 'orcKing':
 while True:
     
     displaySurf.fill(white)
-    drawView(worldWidth,worldHeight,0,terrain,0,0,youx,youy,)
+    drawView(worldWidth,worldHeight,0,terrain,0,0,you,youx,youy,)
 
     if unit[youy][youx] != 'nothing' and unit [youy][youx] != 'orcFighter1dead':
         chance = random.randint(1,100)
