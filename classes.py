@@ -34,7 +34,7 @@ class Being():
             print('%s is dead.' % (self.name))
             return False
         else:
-            print("%s's health is at %s" % (self.name, self.health))
+            print("%s's health is at %s" % (self.name, s elf.health))
             return True
 
     def heal(self):
