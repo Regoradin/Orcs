@@ -1,5 +1,7 @@
 import pygame, sys, time, random
 from pygame.locals import *
+from classes import *
+from weapons import *
 from pprint import pprint
 
 pygame.init()
@@ -16,6 +18,8 @@ mountain = (80,80,80)
 
 mouseClicked = False
 death = None
+unit_check = None
+
 
 #Asking setup questions. Graphicize and prettiezize later.
 print("How big would you like the world to be?")
@@ -23,8 +27,9 @@ print("How big would you like the world to be?")
 worldHeight = int(input())
 worldWidth  = worldHeight
 pixelsPerGrid = int(1000/worldHeight)
+squares = worldHeight * worldWidth
 
-print("Who would you like to play as, Fireball Joe, The Palladin King, or the \nOrb of Hungering?")
+print("Who would you like to play as, Fireball Joe, The Palladin King, the \nOrb of Hungering, or the Orc King?")
 char = input()
 if char  == 'joe':
     you = pygame.image.load('joe.png')
@@ -70,20 +75,46 @@ def generateTerrain(width, height, elevation):
 
     return terrain
 
+def checkUnit(friendly_total_units, unit):
+    for v in range(friendly_units_total):
+        if x.y == unit[v].y:
+            if x.x == unit[v].x:
+                x.x = random.randint(0, width-1)
+                x.y = random.randint(0, height-1)
+                unit_check = False
+                return unit_check
+            else:
+                unit_check = True
+                return unit_check
+        else:
+            unit_check = True
+            return unit_check
+
 def generateUnit(width, height):
-    unit=[]
-    for x in range(width):
-        unit.append([])
-        for y in range (height):
-            unit[x].append(random.randint(1,100))
-    for x in range (width):
-        for y in range (height):
-            if unit[y][x] >40:
-                unit[y][x] = 'nothing'
-            elif unit[y][x] <= 20:
-                unit[y][x] = 'orcFighter1'
-            elif unit[y][x] >20 and unit[y][x] <= 40:
-                unit[y][x] = 'humanFighter1'
+    friendly_units_total = 0
+    unit = []
+    for x in range(int(squares/5)):
+        x = Being('x', random.randint(0, width-1), random.randint(0, height-1), 'holdimg', 'holdhealth', 'holdweapon', 'holdrole', 1, 'friend')
+        #When ranger implemented SET TO RANDOM
+        y = 1
+        #y = random.randint(1,2)
+        z = random.randint(1,2)
+        if y == 1:
+            x.role = 'fighter'
+            x.health = 100
+            x.img = orcFighter1
+            if z == 1:
+                x.weapon = club_wooden
+            if z == 2:
+                x.weapon = sword_wooden
+            checkUnit(friendly_total_units, unit)
+            while unit_check == False:
+                print('fail')
+                cheeckUnit
+            
+        unit.append(x)
+        friendly_units_total += 1
+            
                 
 
     return unit
