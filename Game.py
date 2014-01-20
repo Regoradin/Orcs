@@ -75,12 +75,13 @@ def generateTerrain(width, height, elevation):
 
     return terrain
 
-def checkUnit(friendly_total_units, unit):
+#Checks if anything (other (friendly) units) is in x's place, where x is a being object
+def checkUnit(friendly_units_total, x, unit):
     for v in range(friendly_units_total):
         if x.y == unit[v].y:
             if x.x == unit[v].x:
-                x.x = random.randint(0, width-1)
-                x.y = random.randint(0, height-1)
+                x.x = random.randint(0, worldWidth-1)
+                x.y = random.randint(0, worldHeight-1)
                 unit_check = False
                 return unit_check
             else:
@@ -94,7 +95,7 @@ def generateUnit(width, height):
     friendly_units_total = 0
     unit = []
     for x in range(int(squares/5)):
-        x = Being('x', random.randint(0, width-1), random.randint(0, height-1), 'holdimg', 'holdhealth', 'holdweapon', 'holdrole', 1, 'friend')
+        x = Being('Orc' + str(x), random.randint(0, worldWidth-1), random.randint(0, worldHeight-1), 'holdimg', 'holdhealth', 'holdweapon', 'holdrole', 1, 'friend')
         #When ranger implemented SET TO RANDOM
         y = 1
         #y = random.randint(1,2)
@@ -107,10 +108,10 @@ def generateUnit(width, height):
                 x.weapon = club_wooden
             if z == 2:
                 x.weapon = sword_wooden
-            checkUnit(friendly_total_units, unit)
+            checkUnit(friendly_units_total, x, unit)
             while unit_check == False:
                 print('fail')
-                cheeckUnit
+                checkUnit
             
         unit.append(x)
         friendly_units_total += 1
