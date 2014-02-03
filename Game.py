@@ -19,6 +19,7 @@ mountain = (80,80,80)
 mouseClicked = False
 death = None
 unit_check = None
+friendly_units_total = 0
 
 
 #Asking setup questions. Graphicize and prettiezize later.
@@ -28,23 +29,6 @@ worldHeight = int(input())
 worldWidth  = worldHeight
 pixelsPerGrid = int(1000/worldHeight)
 squares = worldHeight * worldWidth
-
-print("Who would you like to play as, Fireball Joe, The Palladin King, the \nOrb of Hungering, or the Orc King?")
-char = input()
-if char  == 'joe':
-    you = pygame.image.load('joe.png')
-elif char == 'king':
-    you = pygame.image.load('pally.png')
-elif char == 'orb':
-    you = pygame.image.load('orb.png')
-elif char == 'orcKing':
-    you = pygame.image.load('orc_king.png')
-
-#Hero Units
-joe = pygame.image.load('joe.png')
-pally = pygame.image.load('pally.png')
-orb = pygame.image.load('orb.png')
-orcKing = pygame.image.load('orc_king.png')
 
 #Standard Units
 guyRed  = pygame.image.load('guyRed.png')
@@ -92,6 +76,7 @@ def checkUnit(friendly_units_total, x, unit):
             return unit_check
 
 def generateUnit(width, height):
+    global friendly_units_total
     friendly_units_total = 0
     unit = []
     for x in range(int(squares/5)):
@@ -191,8 +176,9 @@ def generateElevation(width, height):
 
 
 
-def drawView(width,height,scale,terrain,buildings,units, you, youx, youy):
+def drawView(width,height,scale,terrain,buildings,unit):
 
+    global friendly_units_total
     #Drawing Terrain
     for x in range (width):    
         for y in range (height):
@@ -206,29 +192,9 @@ def drawView(width,height,scale,terrain,buildings,units, you, youx, youy):
                 pygame.draw.rect(displaySurf, mountain, (pixelsPerGrid*x,pixelsPerGrid*y,pixelsPerGrid,pixelsPerGrid))
 
     #Drawing Units
-    for x in range (width):
-        for y in range (height):
-            if terrain[y][x] != 'water':
-                #Hero Units
-                if unit[y][x] == 'joe':
-                    displaySurf.blit(pygame.transform.scale(joe, (pixelsPerGrid, pixelsPerGrid)),(pixelsPerGrid*x, pixelsPerGrid*y))
-                if unit[y][x] == 'pally':
-                    displaySurf.blit(pygame.transform.scale(pally, (pixelsPerGrid, pixelsPerGrid)),(pixelsPerGrid*x, pixelsPerGrid*y))
-                if unit[y][x] == 'orb':
-                    displaySurf.blit(pygame.transform.scale(orb, (pixelsPerGrid, pixelsPerGrid)),(pixelsPerGrid*x, pixelsPerGrid*y))
-                if unit[y][x] == 'orcKing':
-                    displaySurf.blit(pygame.transform.scale(orcKing, (pixelsPerGrid, pixelsPerGrid)),(pixelsPerGrid*x, pixelsPerGrid*y))
-
-                #Standard Units
-                if unit[y][x] == 'nothing':
-                    pass
-                if unit[y][x] == 'orcFighter1':
-                    displaySurf.blit(pygame.transform.scale(orcFighter1, (pixelsPerGrid, pixelsPerGrid)),(pixelsPerGrid*x, pixelsPerGrid*y))
-                if unit[y][x] == 'humanFighter1':
-                    displaySurf.blit(pygame.transform.scale(guyRed,  (pixelsPerGrid, pixelsPerGrid)),(pixelsPerGrid*x, pixelsPerGrid*y))
-                if unit[y][x] == 'orcFighter1dead':
-                    displaySurf.blit(pygame.transform.scale(orcFighter1dead,  (pixelsPerGrid, pixelsPerGrid)),(pixelsPerGrid*x, pixelsPerGrid*y))
-        
+    for z in unit:
+        if z.img == orcFighter1:
+            displaySurf.blit(pygame.transform.scale(orcFighter1, (pixelsPerGrid, pixelsPerGrid)),(pixelsPerGrid*z.x, pixelsPerGrid*z.y))
     #Drawing Lines
     LineCount = 0
     while LineCount <= height-1:
@@ -236,51 +202,34 @@ def drawView(width,height,scale,terrain,buildings,units, you, youx, youy):
         pygame.draw.line(displaySurf, black, (0,LineCount*pixelsPerGrid), (1000,LineCount*pixelsPerGrid),1)
         pygame.draw.line(displaySurf, black, (LineCount*pixelsPerGrid, 0), (LineCount*pixelsPerGrid, 1000),1)
 
-    #Drawing You   
-    displaySurf.blit(pygame.transform.scale(you, (pixelsPerGrid, pixelsPerGrid)),(pixelsPerGrid*youx, pixelsPerGrid*youy))
-
-
-    
+ 
         
 #List of things.
 elevation = generateElevation(worldWidth,worldHeight)
 terrain = generateTerrain(worldWidth, worldHeight, elevation)
 unit = generateUnit(worldWidth, worldHeight)
 
-youx = random.randint(0,worldWidth-1)
-youy = random.randint(0,worldHeight-1)
-while terrain[youy][youx] == 'water' or terrain[youy][youx] == 'mountain' or unit[youy][youx] != 'nothing':
-    youx = random.randint(0,worldWidth-1)
-    youy = random.randint(0,worldHeight-1)
-if char == 'joe':
-    unit[youy][youx] = joe
-if char == 'king':
-    uni[youy][youx] = pally
-if char == 'orb':
-    unit[youy][youx] = orb
-if char == 'orcKing':
-    unit[youy][youx] = orcKing
-
-
 while True:
-    
+    print(friendly_units_total)
+    for v in unit:
+        print(v.name)
     displaySurf.fill(white)
-    drawView(worldWidth,worldHeight,0,terrain,0,0,you,youx,youy,)
+    drawView(worldWidth,worldHeight,0,terrain,0,unit)
 
-    if unit[youy][youx] != 'nothing' and unit [youy][youx] != 'orcFighter1dead':
-        chance = random.randint(1,100)
-        if chance < 25:
-            death = time.time() + 2
-            you = pygame.image.load('dead.png')
-        if chance >= 25:
-            if unit[youy][youx] == 'orcFighter1':
-                unit[youy][youx] = 'orcFighter1dead'
-            else:
-                unit[youy][youx] = 'nothing'
-
-    if death and time.time() >= death:
-        pygame.quit()
-        sys.exit()
+##    if unit[youy][youx] != 'nothing' and unit [youy][youx] != 'orcFighter1dead':
+##        chance = random.randint(1,100)
+##        if chance < 25:
+##            death = time.time() + 2
+##            you = pygame.image.load('dead.png')
+##        if chance >= 25:
+##            if unit[youy][youx] == 'orcFighter1':
+##                unit[youy][youx] = 'orcFighter1dead'
+##            else:
+##                unit[youy][youx] = 'nothing'
+##
+##    if death and time.time() >= death:
+##        pygame.quit()
+##        sys.exit()
             
 
         
