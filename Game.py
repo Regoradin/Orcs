@@ -60,49 +60,45 @@ def generateTerrain(width, height, elevation):
     return terrain
 
 #Checks if anything (other (friendly) units) is in x's place, where x is a being object
-def checkUnit(friendly_units_total, x, unit):
-    for v in range(friendly_units_total):
-        if x.y == unit[v].y:
-            if x.x == unit[v].x:
-                x.x = random.randint(0, worldWidth-1)
-                x.y = random.randint(0, worldHeight-1)
-                unit_check = False
-                return unit_check
-            else:
-                unit_check = True
-                return unit_check
-        else:
-            unit_check = True
-            return unit_check
+def checkUnit(friendly_units_total, new_being, unit_list):
+    for unit in unit_list:
+        if new_being.y == unit.y and new_being.x == unit.x:
+            print('collision detected', new_being)
+            new_being.x = random.randint(0, worldWidth-1)
+            new_being.y = random.randint(0, worldHeight-1)
+            checkUnit(friendly_units_total, new_being, unit_list)
+    if terrain[new_being.y][new_being.x] in ['water', 'mountain']:
+        new_being.x = random.randint(0, worldWidth-1)
+        new_being.y = random.randint(0, worldHeight-1)
+        checkUnit(friendly_units_total, new_being, unit_list)
 
 def generateUnit(width, height):
     global friendly_units_total
     friendly_units_total = 0
     unit = []
     for x in range(int(squares/5)):
-        x = Being('Orc' + str(x), random.randint(0, worldWidth-1), random.randint(0, worldHeight-1), 'holdimg', 'holdhealth', 'holdweapon', 'holdrole', 1, 'friend')
+        new_being = Being('Orc' + str(x), random.randint(0, worldWidth-1), random.randint(0, worldHeight-1), 'holdimg', 'holdhealth', 'holdweapon', 'holdrole', 1, 'friend')
         #When ranger implemented SET TO RANDOM
         y = 1
         #y = random.randint(1,2)
         z = random.randint(1,2)
         if y == 1:
-            x.role = 'fighter'
-            x.health = 100
-            x.img = orcFighter1
+            new_being.role = 'fighter'
+            new_being.health = 100
+            new_being.img = orcFighter1
             if z == 1:
-                x.weapon = club_wooden
+                new_being.weapon = club_wooden
             if z == 2:
-                x.weapon = sword_wooden
-            checkUnit(friendly_units_total, x, unit)
-            while unit_check == False:
-                print('fail')
-                checkUnit
+                new_being.weapon = sword_wooden
+            checkUnit(friendly_units_total, new_being, unit)
             
-        unit.append(x)
+        unit.append(new_being)
         friendly_units_total += 1
+    
             
-                
 
+    for x in unit:
+        print(x.name)
     return unit
 
 def generateElevation(width, height):
@@ -210,9 +206,6 @@ terrain = generateTerrain(worldWidth, worldHeight, elevation)
 unit = generateUnit(worldWidth, worldHeight)
 
 while True:
-    print(friendly_units_total)
-    for v in unit:
-        print(v.name)
     displaySurf.fill(white)
     drawView(worldWidth,worldHeight,0,terrain,0,unit)
 

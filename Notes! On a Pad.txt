@@ -1,0 +1,26 @@
+friendly_units_total = 0
+    unit = []
+    for x in range(int(squares/5)):
+        x = Being('Orc' + str(x), random.randint(0, worldWidth-1), random.randint(0, worldHeight-1), 'holdimg', 'holdhealth', 'holdweapon', 'holdrole', 1, 'friend')
+        #When ranger implemented SET TO RANDOM
+        y = 1
+        #y = random.randint(1,2)
+        z = random.randint(1,2)
+        if y == 1:
+            x.role = 'fighter'
+            x.health = 100
+            x.img = orcFighter1
+            if z == 1:
+                x.weapon = club_wooden
+            if z == 2:
+                x.weapon = sword_wooden
+            checkUnit(friendly_units_total, x, unit)
+            while unit_check == False:
+                print('fail')
+                checkUnit
+            
+        unit.append(x)
+        friendly_units_total += 1
+
+
+displaySurf.blit(pygame.transform.scale(orcFighter1, (pixelsPerGrid, pixelsPerGrid)),(pixelsPerGrid*x, pixelsPerGrid*y))
