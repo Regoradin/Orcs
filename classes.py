@@ -23,6 +23,7 @@ class Being():
 
     def attack(self, target):
         if target.ally == self.ally:
+            print("Target is on your team!")
             pass
         elif self.weapon.durability <= 0:
             pass
@@ -43,12 +44,20 @@ class Being():
             print("%s's health is at %s" % (self.name, self.health))
             return True
 
+    def check_clicked(self, x, y, chosenx, choseny):
+        if self.x == chosenx and self.y == choseny:
+            return True
+        else:
+            return False
+
 
 class Weapon():
     def __init__(self, name, damage, durability):
         self.name = name
         self.damage = damage
         self.durability = durability
+    def __str__(self):
+        return "%s" % (self.name)
     def check_durability(self):
         if self.durability <= 0:
             return False

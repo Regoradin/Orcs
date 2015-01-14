@@ -17,6 +17,7 @@ desert = (225,219,59)
 mountain = (80,80,80)
 
 mouseClicked = False
+controlled = None
 death = None
 unit_check = None
 friendly_units_total = 0
@@ -34,6 +35,8 @@ squares = worldHeight * worldWidth
 guyRed  = pygame.image.load('guyRed.png')
 orcFighter1 = pygame.image.load('Orc_Fighter_1.png')
 orcFighter1dead = pygame.image.load('Orc_Fighter_1_Dead.png')
+
+orc_king_pic = pygame.image.load('orc_king.png')
 
 frozen = None
 pygame.key.set_repeat(125, 125)
@@ -76,7 +79,8 @@ def generateUnit(width, height):
     global friendly_units_total
     friendly_units_total = 0
     unit = []
-    for x in range(int(squares/5)):
+    #Makes basic orcs to cover 20% of the map
+    for x in range(int(squares*.2)):
         new_being = Being('Orc' + str(x), random.randint(0, worldWidth-1), random.randint(0, worldHeight-1), 'holdimg', 'holdhealth', 'holdweapon', 'holdrole', 1, 'friend')
         #When ranger implemented SET TO RANDOM
         y = 1
@@ -94,7 +98,8 @@ def generateUnit(width, height):
             
         unit.append(new_being)
         friendly_units_total += 1
-    
+    orc_king = Being('Orc_King', random.randint(0, worldWidth-1), random.randint(0, worldHeight-1), orc_king_pic, 150, sword_golden, 'king', 2, 'friend')
+    checkUnit(friendly_units_total, orc_king, unit)
             
 
     for x in unit:
@@ -230,19 +235,19 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-        elif event.type == KEYDOWN and not frozen and not death:
-            if event.key in (K_w, K_UP) and youy > 0:
-                youy = youy - 1
-                frozen = time.time() + .4
-            elif event.key in (K_s, K_DOWN) and youy < worldHeight-1:
-                youy = youy + 1
-                frozen = time.time() + .4
-            elif event.key in (K_a, K_LEFT) and youx > 0:
-                youx = youx - 1
-                frozen = time.time() + .4
-            elif event.key in (K_d, K_RIGHT) and youx < worldWidth-1:
-                youx = youx + 1
-                frozen = time.time() + .4
+        elif event.type == KEYDOWN and not frozen and not death and controlled != None:
+            if event.key in (K_w, K_UP) and controlled.y > 0:
+                controlled.y -= 1
+                frozen = time.time() + .2
+            elif event.key in (K_s, K_DOWN) and controlled.y < worldHeight-1:
+                controlled.y += 1
+                frozen = time.time() + .2
+            elif event.key in (K_a, K_LEFT) and controlled.x > 0:
+                controlled.x -= 1
+                frozen = time.time() + .2
+            elif event.key in (K_d, K_RIGHT) and controlled.x < worldWidth-1:
+                controlled.x += 1
+                frozen = time.time() + .2
         elif event.type == MOUSEBUTTONDOWN:
             mousex, mousey = event.pos
             mouseClicked = True
@@ -254,26 +259,38 @@ while True:
             chosenx = int(chosencoordx)
             chosencoordy = mousey/pixelsPerGrid
             choseny = int(chosencoordy)
-            print(chosenx, choseny, you, unit[youy][youx])
-            if unit[choseny][chosenx] == 'orcFighter1':
-                unit[choseny][chosenx] = 'nothing'
-                if char == 'joe':
-                    unit[youy][youx] = joe
-                if char == 'king':
-                    unit[youy][youx] = pally
-                if char == 'orb':
-                    unit[youy][youx] = orb
-                    print('switched')
-                if char == 'orcKing':
-                    unit[youy][youx] = 'orcKing'
-                    print('switched')
-                you = orcFighter1
-                char = 'orcFighter1'
-                youy = choseny
-                youx = chosenx
-            else:
-                pass
+            print(chosenx, choseny)
+            for z in range (len(unit)):
+                clicked = unit[z].check_clicked(unit[z].x, unit[z].y, chosenx, choseny)
+                if clicked == True:
+                    print(unit[z].name)
+                    controlled = unit[z]
+                else:
+                    pass
             mouseClicked = False
+                
+
+
+
+##            if unit[choseny][chosenx] == 'orcFighter1':
+##                unit[choseny][chosenx] = 'nothing'
+##                if char == 'joe':
+##                    unit[youy][youx] = joe
+##                if char == 'king':
+##                    unit[youy][youx] = pally
+##                if char == 'orb':
+##                    unit[youy][youx] = orb
+##                    print('switched')
+##                if char == 'orcKing':
+##                    unit[youy][youx] = 'orcKing'
+##                    print('switched')
+##                you = orcFighter1
+##                char = 'orcFighter1'
+##                youy = choseny
+##                youx = chosenx
+##            else:
+##                pass
+##            mouseClicked = False
 
     
     pygame.display.update()
