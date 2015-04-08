@@ -32,11 +32,16 @@ pixelsPerGrid = int(1000/worldHeight)
 squares = worldHeight * worldWidth
 
 #Standard Units
+selector = pygame.image.load('selector.png')
+
 guyRed  = pygame.image.load('guyRed.png')
 orcFighter1 = pygame.image.load('Orc_Fighter_1.png')
+orc_fighter_1_red = pygame.image.load('Orc_Fighter_1_team_red.png')
+orc_fighter_1_blue = pygame.image.load('Orc_Fighter_1_team_blue.png')
 orcFighter1dead = pygame.image.load('Orc_Fighter_1_Dead.png')
 
 orc_king_pic = pygame.image.load('orc_king.png')
+
 
 frozen = None
 pygame.key.set_repeat(125, 125)
@@ -81,7 +86,7 @@ def generateUnit(width, height):
     unit = []
     #Makes basic orcs to cover 20% of the map
     for x in range(int(squares*.2)):
-        new_being = Being('Orc' + str(x), random.randint(0, worldWidth-1), random.randint(0, worldHeight-1), 'holdimg', 'holdhealth', 'holdweapon', 'holdrole', 1, 'friend')
+        new_being = Being('Orc' + str(x), random.randint(0, worldWidth-1), random.randint(0, worldHeight-1), 'holdimg', 'holdhealth', 'holdweapon', 'holdrole', 1, 'holdally')
         #When ranger implemented SET TO RANDOM
         y = 1
         #y = random.randint(1,2)
@@ -89,11 +94,15 @@ def generateUnit(width, height):
         if y == 1:
             new_being.role = 'fighter'
             new_being.health = 100
-            new_being.img = orcFighter1
+            new_being.img = random.choice([orc_fighter_1_red, orc_fighter_1_blue])
             if z == 1:
                 new_being.weapon = club_wooden
             if z == 2:
                 new_being.weapon = sword_wooden
+            if new_being.img == orc_fighter_1_red:
+                new_being.ally = 'red'
+            if new_being.img == orc_fighter_1_blue:
+                new_being.ally = 'blue'
             checkUnit(friendly_units_total, new_being, unit)
             
         unit.append(new_being)
@@ -194,8 +203,9 @@ def drawView(width,height,scale,terrain,buildings,unit):
 
     #Drawing Units
     for z in unit:
-        if z.img == orcFighter1:
-            displaySurf.blit(pygame.transform.scale(orcFighter1, (pixelsPerGrid, pixelsPerGrid)),(pixelsPerGrid*z.x, pixelsPerGrid*z.y))
+        displaySurf.blit(pygame.transform.scale(z.img, (pixelsPerGrid, pixelsPerGrid)),(pixelsPerGrid*z.x, pixelsPerGrid*z.y))
+    if controlled != None:
+        displaySurf.blit(pygame.transform.scale(selector, (pixelsPerGrid, pixelsPerGrid)), (pixelsPerGrid*controlled.x, pixelsPerGrid*controlled.y))
     #Drawing Lines
     LineCount = 0
     while LineCount <= height-1:
@@ -265,6 +275,7 @@ while True:
                 if clicked == True:
                     print(unit[z].name)
                     controlled = unit[z]
+                    print (controlled.ally)
                 else:
                     pass
             mouseClicked = False
