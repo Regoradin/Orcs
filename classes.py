@@ -30,7 +30,7 @@ class Being():
         else:
             target.health -= self.weapon.damage
             self.weapon.durability -= 1
-            print('%s did %s damage to %s.' % (self.name, self.weapon.damage, target.name))
+            print('%s did %s damage to %s' % (self.name, self.weapon.damage, target.name))
             target.check_health()
             self.weapon.check_durability()
             if self.weapon.check_durability == False:
