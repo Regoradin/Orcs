@@ -24,9 +24,8 @@ class Being():
     def attack(self, target):
         if target.ally == self.ally:
             print("Target is on your team!")
-            pass
         elif self.weapon.durability <= 0:
-            pass
+            print('Your weapon is broken!')
         else:
             target.health -= self.weapon.damage
             self.weapon.durability -= 1

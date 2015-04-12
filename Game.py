@@ -30,7 +30,7 @@ print("How big would you like the world to be?")
 #worldHeight and worldWidth are is space numbers. pixelsPerGrid is the number of pixels in length each grid space is. This is only set up for square grids.
 worldHeight = int(input())
 worldWidth  = worldHeight
-pixelsPerGrid = int(500/worldHeight)
+pixelsPerGrid = int(1000/worldHeight)
 squares = worldHeight * worldWidth
 
 #Standard Units
@@ -48,7 +48,7 @@ orc_king_pic = pygame.image.load('orc_king.png')
 frozen = None
 pygame.key.set_repeat(125, 125)
 
-displaySurf = pygame.display.set_mode((500,500), 0,32)
+displaySurf = pygame.display.set_mode((1000,1000), 0,32)
 pygame.display.set_caption('Orcs Test World')
 
 def generateTerrain(width, height, elevation):
@@ -108,9 +108,9 @@ def generateUnit(width, height):
             new_being.health = 100
             new_being.img = random.choice([orc_fighter_1_red, orc_fighter_1_blue])
             if z == 1:
-                new_being.weapon = club_wooden
+                new_being.weapon = makeClubWooden()
             if z == 2:
-                new_being.weapon = sword_wooden
+                new_being.weapon = makeSwordWooden()
             if new_being.img == orc_fighter_1_red:
                 new_being.ally = 'red'
             if new_being.img == orc_fighter_1_blue:
@@ -274,26 +274,26 @@ while True:
             if event.key in (K_w, K_UP) and controlled.y > 0:
                 if checkMove(target_grid, controlled.x, controlled.y -1) == True:
                     controlled.y -= 1
-                if checkMove(target_grid, controlled.x, controlled.y -1) == 'collision_person':
-                    controlled.attack(target_grid[controlled.x][controlled.y -1])
+                elif checkMove(target_grid, controlled.x, controlled.y -1) == 'collision_person':
+                    controlled.attack(target_grid[controlled.y -1][controlled.x])
                 frozen = time.time() + .2
             elif event.key in (K_s, K_DOWN) and controlled.y < worldHeight-1:
                 if checkMove(target_grid, controlled.x, controlled.y +1) == True:
                     controlled.y += 1
-                if checkMove(target_grid, controlled.x, controlled.y +1) == 'collision_person':
-                    controlled.attack(target_grid[controlled.x][controlled.y +1])
+                elif checkMove(target_grid, controlled.x, controlled.y +1) == 'collision_person':
+                    controlled.attack(target_grid[controlled.y +1][controlled.x])
                 frozen = time.time() + .2
             elif event.key in (K_a, K_LEFT) and controlled.x > 0:
                 if checkMove(target_grid, controlled.x -1, controlled.y) == True:
                     controlled.x -= 1
-                if checkMove(target_grid, controlled.x -1, controlled.y) == 'collision_person':
-                    controlled.attack(target_grid[controlled.x-1][controlled.y])
+                elif checkMove(target_grid, controlled.x -1, controlled.y) == 'collision_person':
+                    controlled.attack(target_grid[controlled.y][controlled.x -1])
                 frozen = time.time() + .2
             elif event.key in (K_d, K_RIGHT) and controlled.x < worldWidth-1:
                 if checkMove(target_grid, controlled.x +1, controlled.y) == True:
                     controlled.x += 1
-                if checkMove(target_grid, controlled.x +1, controlled.y) == 'collision_person':
-                    controlled.attack(target_grid[controlled.x +1][controlled.y])
+                elif checkMove(target_grid, controlled.x +1, controlled.y) == 'collision_person':
+                    controlled.attack(target_grid[controlled.y][controlled.x +1])
                 frozen = time.time() + .2
             target_grid[controlled.y][controlled.x] = controlled
         elif event.type == MOUSEBUTTONDOWN:
@@ -311,8 +311,6 @@ while True:
             if controlled != None:
                 print(controlled.name)
                 print (controlled.ally)
-            else:
-                controlled = None
             mouseClicked = False
 
     
